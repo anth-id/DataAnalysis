@@ -4,16 +4,37 @@ def add(x,y):
 def sub(x,y):
     return x-y
 
-print("Select operator: 1.Add, 2.Subtract")
-choice = input("Enter 1 or 2: ")
-num1 = float(input("Enter first number: "))
-num2 = float(input("Enter second number: "))
+def mult(x,y):
+    return x*y
 
-if choice == "1":
-    print(num1+num2)
-elif choice == "2":
-    print(num1-num2)
+def div(x, y):
+    return x/y
 
-else:
-    print(f"{choice} is not 1 or 2")
+
+while True:
+    print("Select operator: 1.Add, 2.Subtract, 3.Multi, 4.Division \n If you want to stop the program: Press X")
+    choice = input("Enter 1, 2, 3 or 4: ")
+    if choice == "x":
+        break
+    #break choice on x
+
+    num1 = float(input("Enter first number: "))
+    num2 = float(input("Enter second number: "))
+
+    #try while loop so the program doesnt close when finshed. 
+    #Update: when only "While True" it ran infinite. Need ot move input into the while loop.
+
+    if choice == "1":
+        print(num1+num2)
+    elif choice == "2":
+        print(num1-num2)
+    elif choice == "3":
+        print(num1*num2)
+    elif choice == "4":
+        print(num1/num2)
+
+    else:
+        print(f"{choice} is not a choice")
+
+    
 
