@@ -13,6 +13,7 @@
     #500, servern kraschade
 
 import email
+from tokenize import Comment
 
 import requests
 
@@ -27,16 +28,41 @@ else:
 
 groupcounter = 0
 
-for user in users:
-    name:str = user["name"]
-    epost:str = user["email"]
-    city:str = user.get("address",{}).get("city")
-    company_name = user["company"]["name"]
+#for user in users:
+#    name:str = user["name"]
+#    epost:str = user["email"]
+#    city:str = user.get("address",{}).get("city")
+#    company_name:str = user.get("company", {}).get("name")
+#
+#    if "Group" in company_name:
+#        groupcounter += 1
 
-    if "Group" in company_name:
-        groupcounter += 1
+#print(groupcounter)
 
-print(groupcounter)
+
+
+#user3_post = requests.get("https://jsonplaceholder.typicode.com/posts", params={"userId":3})
+#posts = user3_post.json()
+#print(posts)
+#print(user3_post.url)
+#print(len(posts))
+
+postId = requests.get("https://jsonplaceholder.typicode.com/comments", params={"postId":5})
+
+comments = postId.json()
+
+for comment in comments:
+    print(comment["email"])
+    print(comment["body"])
+    print()
+    
+
+print(len(comments))
+
+
+ 
+
+
         
 
 
