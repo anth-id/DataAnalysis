@@ -1,5 +1,4 @@
-from datetime import date, datetime
-from re import S
+from datetime import datetime
 from typing import Any
 
 import keyring
@@ -28,14 +27,13 @@ def getrequest(url:str, args:dict = {}) -> Any:
     else:
         raise SystemError (f"Failed to retrieve data. Status code {response.status_code}")
 #----------
-# can use timedelta function here instead.,
 def formattime(secs:int) -> str:
     # // floor division and returns integer instead of float
     # % whats left of x. Takes whats left of 3600 and divides by 60.
     hours = secs // 3600
     minutes = (secs % 3600) // 60
     seconds:int = secs % 60
-    return f"{sunrise.date()} : {hours}:{minutes}:{seconds}"
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 def get_coordinates(city:str) -> dict:
     args:dict = {
@@ -49,26 +47,27 @@ def get_coordinates(city:str) -> dict:
     return parser[0]
 #-----
 #set standard parameter "today" since the API documentations says this.
-def sun_up_down(lat:float, lon:float, date:str = "today") -> dict:
+def sun_range(lat:float, lon:float, start:str, end:str) -> dict:
     args:dict = {
         "lat": lat,
         "lng": lon,
-        "date": date}
-    return getrequest(sunset_sunrise_api, args)
-
+        "date_start": start,
+        "date_end":end}
+    return getrequest(sunset_sunrise_api, args)["days"]
 
 place =  get_coordinates('Oslo,NO')
-sun = sun_up_down(place["lat"], place["lon"])
-
+days = sun_range(place["lat"], place["lon"], "2026-09-01", "2026-09-30")
 #Lagrar formatteringen av datetime från API callet. 
-sunrise = datetime.fromisoformat(sun["sunrise"])
-sunset = datetime.fromisoformat(sun["sunset"])
+firstday = days[0]
+lastday = days[-1]
 
+# sunrise:datetime = datetime.fromisoformat(days["sunrise"])
+# sunset:datetime = datetime.fromisoformat(days["sunset"])
 
 #Formatterar till H=Hours, M=Minutes, S=Seconds
-print(f"In {place['name']} the sun goes up: {sunrise:%H:%M:%S}, and down: {sunset:%H:%M:%S}")
-
-       
+print(f"{firstday['date']} has a day length of {formattime(firstday['day_length'])} hours")
+print(f"{lastday['date']} has a day length of {formattime(lastday['day_length'])} hours")
+print(f"The differences is: {formattime(firstday['day_length']- lastday['day_length'])} hours")
 
 
 
