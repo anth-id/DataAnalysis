@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 
 import keyring
@@ -7,6 +7,9 @@ import json
 
 #API keyring
 apikey:str = str(keyring.get_password("openweathermap", "api-key"))
+if apikey == 'None':
+    print("Failed to retrieve API Key from Python Keyring")
+
 
 
 
@@ -54,23 +57,29 @@ def sun_range(lat:float, lon:float, start:str, end:str) -> dict:
         "date_start": start,
         "date_end":end}
     return getrequest(sunset_sunrise_api, args)["days"]
+#----
+def sun_today(lat:float, lon:float) -> dict:
+    args:dict = {
+        "lat": lat,
+        "lng": lon}
+    return getrequest(sunset_sunrise_api, args)
 
 place =  get_coordinates('Oslo,NO')
-days = sun_range(place["lat"], place["lon"], "2026-09-01", "2026-09-30")
+days = sun_range(place["lat"], place["lon"],"2026-09-01", "2026-09-30" )
+
 #Lagrar formatteringen av datetime från API callet. 
 firstday = days[0]
 lastday = days[-1]
+today = sun_today(place["lat"], place["lon"])
 
-# sunrise:datetime = datetime.fromisoformat(days["sunrise"])
-# sunset:datetime = datetime.fromisoformat(days["sunset"])
-
-#Formatterar till H=Hours, M=Minutes, S=Seconds
-print(f"{firstday['date']} has a day length of {formattime(firstday['day_length'])} hours")
-print(f"{lastday['date']} has a day length of {formattime(lastday['day_length'])} hours")
-print(f"The differences is: {formattime(firstday['day_length']- lastday['day_length'])} hours")
+#brukar istället för formattime
+duration:timedelta = timedelta(seconds=firstday['day_length']-lastday['day_length'])
 
 
 
+moonphase:str = today['moon_phase']
+moonillumination:float = today['moon_illumination']
+print(f"{today['date']}: {moonphase} , {moonillumination} % illuminated")
 
 
 
