@@ -1,5 +1,5 @@
 # Almanac
-Python script that takes user input as a city and country code. Looks up the coordinates and uses them to retrieve moonphase, moon illumination, sunrise and sunset for the specific city.
+Python script that takes user input as a city and country code. Looks up the coordinates and uses them to retrieve moonphase, moon illumination, sunrise and sunset for the specific city at todays date.
 
 ## How it works
 
@@ -9,7 +9,7 @@ Python script that takes user input as a city and country code. Looks up the coo
 4. The script prints the results.
 
 ## Requirements
-* Python 3.14.7
+* Python
 * OpenweatherMap API Key (Free)
 * The packages *requests* and *keyring* (in requirements.txt)
 
@@ -28,10 +28,13 @@ keyring set openweathermap api-key
 ```
 
 ## Usage
-Input:
+When starting the program it will ask for input:
 ```text
-'In which city do you want to see moon and sun information? Format:(City,Countrycode)
-Oslo,NO
+In which city do you want to see moon and sun information? Format:(City,Countrycode)
+```
+User input:
+```
+Oslo, NO
 ```
 
 Example output:
