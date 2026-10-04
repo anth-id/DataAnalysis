@@ -27,7 +27,20 @@ pip install -r requirements.txt
 keyring set openweathermap api-key
 ```
 ## How to run 
+Create a new folder and clone the repository in there. Then enter the folder arbeidskrav_1.
+
 ```
+git clone https://github.com/anth-id/DataAnalysis.git
+```
+Create and activate your virtual environment
+```
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+Install the packages and run the program
+```
+pip install -r requirements.txt
 python Almanac.py
 ```
 
