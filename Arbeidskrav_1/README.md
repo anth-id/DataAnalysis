@@ -1,29 +1,45 @@
 # Almanac
-Python script that takes user input as a city and country code. Looks up the coordinates and uses them to retrieve moonphase, moon illumination, sunrise and sunset for the specifik city.
+Python script that takes user input as a city and country code. Looks up the coordinates and uses them to retrieve moonphase, moon illumination, sunrise and sunset for the specific city.
 
 ## How it works
 
 1. Takes user input as *cityname, countrycode*.
-2. OpenWeatheMap API gives us longitude and latitude of the city.
-3. Sunrise-Sunset API returns sun and moon data for those coordinates.
+2. OpenWeatherMap API gives us longitude and latitude of the city. (Needs an account)
+3. Sunrise-Sunset API returns sun and moon data for those coordinates. (Doesnt need an account or API key, but has usage limits )
 4. The script prints the results.
 
 ## Requirements
+* Python 3.14.7
 * OpenweatherMap API Key (Free)
 * The packages *requests* and *keyring* (in requirements.txt)
 
-```python
+```bash 
 pip install requests keyring
 ```
 or
-```
+``` bash
 pip install -r requirements.txt
 ```
+## How to set it up
+1. Get your API key from [OpenWeatherMap](https://openweathermap.org/api)
+2. Store your API Key with Python Keyring with the following command. Then paste your key in the terminal.
+```
+keyring set openweathermap api-key
+```
 
-Vises som:
-print("Hei, verden!")
-Tabell
-| Name | Age |
-|------|-----|
-| John | 30 |
-| Jane | 25 |
+## Usage
+Input:
+```text
+'In which city do you want to see moon and sun information? Format:(City,Countrycode)
+Oslo,NO
+```
+
+Example output:
+```text
+Here is some information of Oslo as of 2026-10-04:
+Moonphase: Waxing Gibbous
+Moonillumination: 78.4 %
+Sunrise: 07:41:12
+Sunset: 18:02:37
+```
+
