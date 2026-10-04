@@ -26,6 +26,10 @@ pip install -r requirements.txt
 ```
 keyring set openweathermap api-key
 ```
+## How to run 
+```
+python Almanac.py
+```
 
 ## Usage
 When starting the program it will ask for input:
