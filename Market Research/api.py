@@ -58,6 +58,8 @@ def search_units(postalcode:str, businesscode:str) -> dict:
     units = data.get("_embedded", {}).get("underenheter", [])
     total_units = data.get("page", {}).get("totalElements", len(units))
 
+    
+    
     if total_units > len(units):
         print(f"{total_units} were found but only {len(units)} were shown.")
 
@@ -78,6 +80,11 @@ postalcode = input("Postalcode: ")
 businesscode = input("Businesscode: ")
 
 results_units = search_units(postalcode, businesscode)
+
+#Exit program when search_units function returns an empty list. 
+if not results_units:
+    print("No match was found.")
+    raise SystemExit
 
 df = pd.json_normalize(results_units)[Columns]
 print(df)
