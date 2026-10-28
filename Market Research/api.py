@@ -1,4 +1,5 @@
 from typing import Any
+from unittest import result
 import requests
 import json
 import pandas as pd
@@ -12,7 +13,7 @@ BASE_URL_BRREG_API = 'https://data.brreg.no/enhetsregisteret/api/underenheter'
 
 #Documentation:
 #https://ws.geonorge.no/adresser/v1/
-BASE_URL_GEONORGE_API = 'https://ws.geonorge.no/adresser/v1/'
+BASE_URL_GEONORGE_API = 'https://ws.geonorge.no/adresser/v1/sok'
 
 #-------
 #Get API Function
@@ -21,7 +22,7 @@ def get_api(url:str, args:dict = {} ) -> Any:
     response = requests.get(url, args, timeout=10)
     if response.status_code == 200:
         data:str = response.text
-        #print(data)
+        # print(data)
         return json.loads(data)
     else:
         raise SystemError (f"Failed to retrieve data. Status code {response.status_code}")
@@ -80,6 +81,10 @@ if not results_units:
 #Geonorge API to retrieve lon and lat for the difference businesses.
 #-------
 
+
+adresses = [result["beliggenhetsadresse"]["adresse"] for result in results_units if "beliggenhetsadresse" in result]
+print(adresses)
+
 def getcoordinates(adress:str, postalcode:str):
     #I will use adress from BRREG to retrieve lon and lat from geonorge
     # continue on this function to retrieve lon and lat
@@ -87,9 +92,14 @@ def getcoordinates(adress:str, postalcode:str):
         "sok" : adress,
         "postnummer" : postalcode,
         "treffperside" : 1000, 
-
     }
-    return get_api(BASE_URL_GEONORGE_API + "sok", args)
+    lon_lat_dict = []
+    for adress in adresses:
+
+        
+
+        data:list = get_api(BASE_URL_GEONORGE_API, args)
+
 
 
 
@@ -100,7 +110,7 @@ print(df)
 
 
 #Something is wrong here. I think i need to loop through everything and pull out each adress.
-adresses = pd.json_normalize(df["beliggenhetsadresse.adresse"])
-coordinates = getcoordinates(adresses, postalcode)
+# adresses = pd.json_normalize(df["beliggenhetsadresse.adresse"])
+# coordinates = getcoordinates(adresses, postalcode)
 
-print(adresses)
+# print(adresses)
