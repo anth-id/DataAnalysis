@@ -1,3 +1,6 @@
+from typing import Any
+
+from matplotlib.pyplot import hist
 import requests
 import json
 import pandas as pd
@@ -98,24 +101,30 @@ def getcoordinates(adresses:list, postalcode:str):
             "postnummer" : postalcode,
             "treffPerSide" : 1
         }
-        #Keyerror 0, means data is a dict not a list. Needs to fix this.
-        data:list = get_api(BASE_URL_GEONORGE_API, args)
+        data:dict = get_api(BASE_URL_GEONORGE_API, args)
+        if not data.get("adresser"):
+            continue
+        hits = data["adresser"][0]["representasjonspunkt"]
+
         lon_lat_list.append({
             "adresse": adress,
-            "lon" : data.get(["representasjonspunkt"]["lon"]),
-            "lat" : data.get(["representasjonspunkt"]["lat"])
-        })
+            "lon" : hits.get("lon"),
+            "lat" : hits.get("lat")
+                    })
     return lon_lat_list
+
         
 
-print(getcoordinates(adresses, postalcode))
+
 
 
 
 
 #Use columns only for me to show the most important thing for me. 
-df = pd.json_normalize(results_units)[Columns]
-print(df)
+df2 = pd.json_normalize(results_units)[Columns]
+df1 = pd.json_normalize(getcoordinates(adresses,postalcode))
+print(df1)
+print(df2)
 
 
 #Something is wrong here. I think i need to loop through everything and pull out each adress.
