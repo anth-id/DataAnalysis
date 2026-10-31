@@ -1,5 +1,3 @@
-from typing import Any
-from unittest import result
 import requests
 import json
 import pandas as pd
@@ -83,23 +81,34 @@ if not results_units:
 
 
 adresses = [result["beliggenhetsadresse"]["adresse"] for result in results_units if "beliggenhetsadresse" in result]
-print(adresses)
+# print(adresses)
 
-def getcoordinates(adress:str, postalcode:str):
+
+adresses = [result["beliggenhetsadresse"]["adresse"] for result in results_units if "beliggenhetsadresse" in result]
+# print(adresses)
+
+def getcoordinates(adresses:list, postalcode:str):
     #I will use adress from BRREG to retrieve lon and lat from geonorge
     # continue on this function to retrieve lon and lat
-    args:dict = {
-        "sok" : adress,
-        "postnummer" : postalcode,
-        "treffperside" : 1000, 
-    }
-    lon_lat_dict = []
+   
+    lon_lat_list = []
     for adress in adresses:
-
+        args:dict = {
+            "sok" : adress,
+            "postnummer" : postalcode,
+            "treffPerSide" : 1
+        }
+        #Keyerror 0, means data is a dict not a list. Needs to fix this.
+        data:list = get_api(BASE_URL_GEONORGE_API, args)
+        lon_lat_list.append({
+            "adresse": adress,
+            "lon" : data.get(["representasjonspunkt"]["lon"]),
+            "lat" : data.get(["representasjonspunkt"]["lat"])
+        })
+    return lon_lat_list
         
 
-        data:list = get_api(BASE_URL_GEONORGE_API, args)
-
+print(getcoordinates(adresses, postalcode))
 
 
 
