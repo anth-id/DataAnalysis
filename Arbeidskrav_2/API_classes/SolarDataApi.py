@@ -1,5 +1,5 @@
-from Arbeidskrav_2.Models.SolarData import SolarData
-from Arbeidskrav_2.API_classes.BaseApi import BaseApi
+from Models.SolarData import SolarData
+from API_classes.BaseApi import BaseApi
 
 class SolarDataApi(BaseApi):
     def __init__(self, url, params):
@@ -9,7 +9,7 @@ class SolarDataApi(BaseApi):
         data:dict = self.getrequest()
         if len(data) > 0:
             return data
-        raise FileNotFoundError("No solardata found")
+        raise SystemExit("No solardata found")
 
     def getresults(self) -> list[SolarData]:
         data:list[SolarData] = []

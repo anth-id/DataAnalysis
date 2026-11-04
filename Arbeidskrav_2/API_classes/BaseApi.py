@@ -20,9 +20,10 @@ class BaseApi(ABC):
         
 #Creating a function to call api and save to a python readable JSON file. Since this is a general function to call the API. We set the return type annotation to Any.
     def getrequest(self) -> Any:
-        response = requests.get(self.url, self.params)
+        response = requests.get(self.url, self.params,timeout=10)
         if response.status_code == 200:
             data:str = response.text
             return json.loads(data)
         else:
             raise SystemError (f"Failed to retrieve data. Status code {response.status_code}")
+

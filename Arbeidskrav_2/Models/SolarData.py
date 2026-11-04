@@ -16,7 +16,7 @@ class SolarData:
     def __str__(self) -> str:
         return (
             f"Date: {self.date}\n"
-            f"Moon illumination: {self.moon_illumination}\n"
+            f"Moon illumination: {self.moon_illumination}%\n"
             f"Sunrise azimuth: {self.sunrise_azimuth}\n"
             f"Solar noon altitude: {self.solar_noon_altitude}\n"
             f"Sunset: {self.sunset.strftime('%H:%M:%S')}\n"
