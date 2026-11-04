@@ -1,8 +1,8 @@
 import keyring
-from SolarDataApi import SolarDataApi
-from GeoDataApi import GeoDataApi
-from GeoData import GeoData
-from SolarData import SolarData
+from Arbeidskrav_2.API_classes.SolarDataApi import SolarDataApi
+from Arbeidskrav_2.API_classes.GeoDataApi import GeoDataApi
+from Arbeidskrav_2.Models.GeoData import GeoData
+from Arbeidskrav_2.Models.SolarData import SolarData
 
 
 #Saving api-key to openweathermap as apikey, raises systemexit if it cant retrieve the api key

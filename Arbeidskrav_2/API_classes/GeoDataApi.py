@@ -1,5 +1,5 @@
-from BaseApi import BaseApi
-from GeoData import GeoData
+from Arbeidskrav_2.API_classes.BaseApi import BaseApi
+from Arbeidskrav_2.Models.GeoData import GeoData
 class GeoDataApi(BaseApi):
     def __init__(self, url, params):
         super().__init__(url, params)

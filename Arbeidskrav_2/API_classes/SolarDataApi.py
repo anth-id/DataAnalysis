@@ -1,5 +1,5 @@
-from SolarData import SolarData
-from BaseApi import BaseApi
+from Arbeidskrav_2.Models.SolarData import SolarData
+from Arbeidskrav_2.API_classes.BaseApi import BaseApi
 
 class SolarDataApi(BaseApi):
     def __init__(self, url, params):
