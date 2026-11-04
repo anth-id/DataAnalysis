@@ -84,11 +84,8 @@ if not results_units:
 
 
 adresses = [result["beliggenhetsadresse"]["adresse"] for result in results_units if "beliggenhetsadresse" in result]
-# print(adresses)
-
-
-adresses = [result["beliggenhetsadresse"]["adresse"] for result in results_units if "beliggenhetsadresse" in result]
-# print(adresses)
+print(results_units)
+print(adresses)
 
 def getcoordinates(adresses:list, postalcode:str):
     #I will use adress from BRREG to retrieve lon and lat from geonorge

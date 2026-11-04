@@ -1,0 +1,28 @@
+Arbeidskrav_1/arbeidskrav1_new.py
+Arbeidskrav_1/open_weather_map_api.py
+Arbeidskrav_1/requirements.txt
+Oppgaver/api_http_json_training.py
+Oppgaver/calculator_3.py
+Oppgaver/calculator.py
+Oppgaver/dbtest.py
+Oppgaver/open_weather_map_api.py
+Oppgaver/price.py
+Oppgaver/testprogram.py
+Uke41 - DB programming/dbtest.py
+Uke41 - DB programming/fav_food.py
+Uke41 - DB programming/message.txt
+Uke41 - DB programming/pets.py
+Uke41 - DB programming/student_rapport.py
+Uke43 - numpy/datetime_test.py
+Uke43 - numpy/numpy_test.py
+Uke43 - numpy/tuples_sort.py
+Uke43 - numpy/__pycache__/datetime.cpython-314.pyc
+Uke43 - numpy/__pycache__/numpy.cpython-314.pyc
+Uke44- Pandas/oppgave_uke44.py
+Uke44- Pandas/sales.csv
+Uke45-OOP/Intro.py
+**/*.pyc
+Uke45-OOP/abstracts.py
+Uke45-OOP/Animal.py
+Uke45-OOP/inheritance.py
+Uke45-OOP/LibrabryBook.py
