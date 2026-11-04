@@ -9,7 +9,7 @@ class SolarData:
         self.solar_noon_altitude:float = rec['solar_position']['solar_noon_altitude']
         self.sunset:datetime = datetime.fromisoformat(rec['sunset'])
         self.sunrise:datetime = datetime.fromisoformat(rec['sunrise'])
-        self.daylen:timedelta = timedelta(rec['day_length'])
+        self.daylen:timedelta = timedelta(seconds=rec['day_length'])
         self.daylen_seconds:int = rec['day_length']
 
     def __str__(self) -> str:
