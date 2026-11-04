@@ -18,7 +18,6 @@ class BaseApi(ABC):
     def getresult(self) -> Any:
         pass
         
-
 #Creating a function to call api and save to a python readable JSON file. Since this is a general function to call the API. We set the return type annotation to Any.
     def getrequest(self) -> Any:
         response = requests.get(self.url, self.params)

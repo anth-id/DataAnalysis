@@ -1,7 +1,7 @@
 from SolarData import SolarData
 from BaseApi import BaseApi
 
-class SunsetSunriseApi(BaseApi):
+class SolarDataApi(BaseApi):
     def __init__(self, url, params):
         super().__init__(url,params)
 
@@ -9,9 +9,9 @@ class SunsetSunriseApi(BaseApi):
         data:dict = self.getrequest()
         if len(data) > 0:
             return data
-        raise FileNotFoundError("No GeoData found")
+        raise FileNotFoundError("No solardata found")
 
     def getresults(self) -> list[SolarData]:
         data:list[SolarData] = []
         parser = self.getrequest()
-        return [SolarData(p) for p in parser]
+        return [SolarData(p) for p in parser['days']]

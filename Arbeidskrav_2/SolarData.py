@@ -3,6 +3,7 @@ from datetime import timedelta
 
 class SolarData:
     def __init__(self, rec:dict):
+        self.date = rec['date']
         self.moon_illumination:float = rec['moon_illumination']
         self.sunrise_azimuth:float = rec['solar_position']['sunrise_azimuth']
         self.sunrise_azimuth:float = rec['solar_position']['sunrise_azimuth']
@@ -14,6 +15,7 @@ class SolarData:
 
     def __str__(self) -> str:
         return (
+            f"Date: {self.date}\n"
             f"Moon illumination: {self.moon_illumination}\n"
             f"Sunrise azimuth: {self.sunrise_azimuth}\n"
             f"Solar noon altitude: {self.solar_noon_altitude}\n"
