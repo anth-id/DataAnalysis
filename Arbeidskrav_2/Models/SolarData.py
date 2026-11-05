@@ -1,18 +1,34 @@
 from datetime import datetime
 from datetime import timedelta
 
+
 class SolarData:
+
+    @staticmethod
+    def parse_time(value:str | None) -> datetime | None:
+        if value is None:
+            return None
+        return datetime.fromisoformat(value)
+
+    @staticmethod
+    def format_time(value:datetime | None) -> str | None:
+        if value is None:
+            return "N/A"
+        return value.strftime("%H:%M:S")
+
+
+
     def __init__(self, rec:dict):
+        seconds:int | None = rec['day_length']
         self.date = rec['date']
         self.moon_illumination:float = rec['moon_illumination']
         self.sunrise_azimuth:float = rec['solar_position']['sunrise_azimuth']
-        self.sunrise_azimuth:float = rec['solar_position']['sunrise_azimuth']
         self.solar_noon_altitude:float = rec['solar_position']['solar_noon_altitude']
-        self.sunset:datetime = datetime.fromisoformat(rec['sunset'])
-        self.sunrise:datetime = datetime.fromisoformat(rec['sunrise'])
-        self.daylen:timedelta = timedelta(seconds=rec['day_length'])
-        self.daylen_seconds:int = rec['day_length']
-        self.daylen_hours:int = rec['day_length']/3600
+        self.sunset:datetime | None = self.parse_time(rec['sunset'])
+        self.sunrise:datetime | None = self.parse_time(rec['sunrise'])
+        self.daylen:timedelta | None = None if seconds is None else timedelta(seconds=rec['day_length'])
+        self.daylen_seconds:int | None = seconds
+        self.daylen_hours:float | None = None if seconds is None else seconds / 3600
 
     def __str__(self) -> str:
         return (
@@ -20,8 +36,8 @@ class SolarData:
             f"Moon illumination: {self.moon_illumination}%\n"
             f"Sunrise azimuth: {self.sunrise_azimuth}\n"
             f"Solar noon altitude: {self.solar_noon_altitude}\n"
-            f"Sunset: {self.sunset.strftime('%H:%M:%S')}\n"
-            f"Sunrise: {self.sunrise.strftime('%H:%M:%S')}\n"
+            f"Sunset: {self.format_time(self.sunset)}\n"
+            f"Sunrise: {self.format_time(self.sunrise)}\n"
             f"Daylength: {self.daylen}\n"
             f"Daylength_seconds: {self.daylen_seconds}"
         )

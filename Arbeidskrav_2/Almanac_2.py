@@ -5,6 +5,7 @@ from API_classes.GeoDataApi import GeoDataApi
 from Models.GeoData import GeoData
 from Models.SolarData import SolarData
 import matplotlib.pyplot as plt
+import csv
 
 #Saving api-key to openweathermap as apikey, raises systemexit if it cant retrieve the api key
 apikey:str = str(keyring.get_password("openweathermap", "api-key"))
@@ -42,11 +43,11 @@ for city in cities:
             }
         solarApi:SolarDataApi = SolarDataApi(sunset_sunrise_api,solar_params)
         sdata = solarApi.getresults()
-    except Exception:
-        raise SystemExit(f"Are you sure {city} is a real spelled correctly?")
 
-    finally:
-        print(f"Solardata was retrieved for {city}.")
+        print(f"Trying to retrieve information for {city}.")    
+    except Exception as e :
+        raise SystemExit(f"An error has occured for {city} ({e})")
+
 
 
     #Sorting on date
