@@ -20,6 +20,7 @@ openweathermap_api:str = "https://api.openweathermap.org/geo/1.0/direct"
 #Saving user input as city and countrycode (q paramater used in get_cityinfo())
 location_input:str = input('Enter your cities, separated with commas.\n')
 cities = [l.strip() for l in location_input.split(",")]
+dfs:list[pd.DataFrame] = []
 # startday_input:str = input('Enter your start date\n')
 # endday_input:str = input('Enter your end date\n')
 
@@ -42,29 +43,44 @@ for city in cities:
         solarApi:SolarDataApi = SolarDataApi(sunset_sunrise_api,solar_params)
         sdata = solarApi.getresults()
     except Exception:
-        raise SystemExit("Are you sure that is a real city?")
+        raise SystemExit(f"Are you sure {city} is a real spelled correctly?")
 
+    finally:
+        print(f"Solardata was retrieved for {city}.")
 
-
-    for g in gdata:
-        print(g)
 
     #Sorting on date
-    days:list = sorted(sdata, key=lambda SolarData: SolarData.date)
+    days:list[SolarData] = sorted(sdata, key=lambda SolarData: SolarData.date)
 
-    for day in days:
-        print(day)
+    df = pd.DataFrame(d.__dict__ for d in days)
+    df["city"] = city
+    dfs.append(df)
 
 
-    df = pd.json_normalize(d.__dict__ for d in days)
-    df.plot.line(
-        title=f"Solar Altitude {city}",
-        x="date",
-        y="solar_noon_altitude"
-    )
-    plt.xlabel("Date")
-    plt.ylabel("Degrees over horizon")
-    plt.show()
+dfcombined = pd.concat(dfs, ignore_index=True)
+plot_data = dfcombined.pivot(
+    columns="city",
+    index="date",
+    values="solar_noon_altitude"
+)
 
-print(df)
+plot_data.plot.line(title="Solar Altidude")
+plt.xlabel("Date")
+plt.ylabel("Degrees over horizon")
+plt.show()
+
+
+dfcombined = pd.concat(dfs, ignore_index=True)
+plot_data = dfcombined.pivot(
+    columns="city",
+    index="date",
+    values="daylen_hours"
+)
+
+plot_data.plot.line(title="Day length")
+plt.xlabel("Date")
+plt.ylabel("Day length")
+plt.show()
+
+
 
