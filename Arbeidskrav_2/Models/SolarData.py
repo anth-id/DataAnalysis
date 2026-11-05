@@ -12,6 +12,7 @@ class SolarData:
         self.sunrise:datetime = datetime.fromisoformat(rec['sunrise'])
         self.daylen:timedelta = timedelta(seconds=rec['day_length'])
         self.daylen_seconds:int = rec['day_length']
+        self.daylen_hours:int = rec['day_length']/3600
 
     def __str__(self) -> str:
         return (
