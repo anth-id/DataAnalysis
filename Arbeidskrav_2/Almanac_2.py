@@ -5,7 +5,6 @@ from API_classes.GeoDataApi import GeoDataApi
 from Models.GeoData import GeoData
 from Models.SolarData import SolarData
 import matplotlib.pyplot as plt
-import csv
 
 #Saving api-key to openweathermap as apikey, raises systemexit if it cant retrieve the api key
 apikey:str = str(keyring.get_password("openweathermap", "api-key"))
@@ -33,6 +32,7 @@ for city in cities:
                 }
     geoApi:GeoDataApi = GeoDataApi(openweathermap_api, geo_params)
     gdata:list[GeoData] = geoApi.getresults()
+    
 
     try: 
         solar_params = {
@@ -48,7 +48,8 @@ for city in cities:
     except Exception as e :
         raise SystemExit(f"An error has occured for {city} ({e})")
 
-
+    for s in sdata:
+        print(s)
 
     #Sorting on date
     days:list[SolarData] = sorted(sdata, key=lambda SolarData: SolarData.date)
@@ -65,7 +66,7 @@ plot_data = dfcombined.pivot(
     values="solar_noon_altitude"
 )
 
-plot_data.plot.line(title="Solar Altidude")
+plot_data.plot.line(title="Solar Altidude", xlabel = "Date", ylabel="Azimuth")
 plt.xlabel("Date")
 plt.ylabel("Degrees over horizon")
 plt.show()
@@ -82,6 +83,7 @@ plot_data.plot.line(title="Day length")
 plt.xlabel("Date")
 plt.ylabel("Day length")
 plt.show()
+
 
 
 

@@ -29,6 +29,7 @@ class SolarData:
         self.daylen:timedelta | None = None if seconds is None else timedelta(seconds=rec['day_length'])
         self.daylen_seconds:int | None = seconds
         self.daylen_hours:float | None = None if seconds is None else seconds / 3600
+        self.moon_phase:str = rec['moon_phase']
 
     def __str__(self) -> str:
         return (
@@ -39,5 +40,6 @@ class SolarData:
             f"Sunset: {self.format_time(self.sunset)}\n"
             f"Sunrise: {self.format_time(self.sunrise)}\n"
             f"Daylength: {self.daylen}\n"
-            f"Daylength_seconds: {self.daylen_seconds}"
+            f"Daylength_seconds: {self.daylen_seconds}\n"
+            f"Moonphase: {self.moon_phase}"
         )
