@@ -1,5 +1,3 @@
-from typing import final
-
 import keyring
 import psycopg2
 import pandas as pd
@@ -15,23 +13,39 @@ apikey:str = str(keyring.get_password("openweathermap", "api-key"))
 if apikey == 'None':
     raise SystemExit("Failed to retrieve API Key from Python Keyring")
 
-
 #saving api base url as string variables
 sunset_sunrise_api:str = "https://api.sunrise-sunset.org/v2"
 openweathermap_api:str = "https://api.openweathermap.org/geo/1.0/direct"
 
 
 
-#Saving user input as city and countrycode (q paramater used in get_cityinfo())
+'''
+1. Saving user input as city. (City is used as q parameter in geo_params dict)
+2. Using list comprehension to first split userinput into separate strings and then strip blankspaces. Saving each city into cities list.
+3. Creating a dataframe list used to save each city df into one.
+'''
 location_input:str = input('Enter your cities, separated with commas.\n')
 cities = [l.strip() for l in location_input.split(",")]
 dfs:list[pd.DataFrame] = []
-# startday_input:str = input('Enter your start date\n')
-# endday_input:str = input('Enter your end date\n')
+
+'''
+1. Creating a credentials variable (cred) for setting up postgreSQL connection.
+2. If failed to retrieve credentials, then raise SystemExit.
+3. Creating a SolarDataDB object that connects to the database. 
+
+'''
 cred = keyring.get_credential("PostgreSQL", "postgres")
 if cred is None:
     raise SystemExit("Failed to retreieve database credentials.")
 db:SolarDataDb = SolarDataDb(f"host=localhost dbname=dataanalytiker_FSV user={cred.username} password={cred.password}")
+
+'''
+1. Looping trough each city in cities list and assigns city to q parameter and uses api-key as app-id.
+2. Creating a GeoDataApi object as geoApi with openweathermap api url and geo_params.
+3. Creating a list called gdata which calls GeoDataApi method to retreive and save GeoData from the api call.
+
+
+'''
 try:
     for city in cities:
         geo_params:dict = {
@@ -42,13 +56,14 @@ try:
         geoApi:GeoDataApi = GeoDataApi(openweathermap_api, geo_params)
         gdata:list[GeoData] = geoApi.getresults()
         
+        
 
         try: 
             solar_params = {
                 "lat": gdata[0].lat,
                 "lng": gdata[0].lon,
-                "date_start": '2026-01-01',#startday_input,
-                "date_end": '2026-12-31'#endday_input
+                "date_start": '2026-01-01',
+                "date_end": '2026-12-31'
                 }
             solarApi:SolarDataApi = SolarDataApi(sunset_sunrise_api,solar_params)
             sdata = solarApi.getresults()
