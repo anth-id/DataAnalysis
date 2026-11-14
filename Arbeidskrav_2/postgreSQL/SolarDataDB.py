@@ -8,7 +8,7 @@ class SolarDataDb:
         try:
             self.conn = psycopg2.connect(dburl)
         except Exception as e:
-            print( "Failed to open database.")
+            print( "Failed to connect to database.")
             raise e
 
     def getcity(self, geo:GeoData) -> int:
