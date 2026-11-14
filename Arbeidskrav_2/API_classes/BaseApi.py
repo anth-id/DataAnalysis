@@ -11,11 +11,11 @@ class BaseApi(ABC):
         self.params = params
 
     @abstractmethod
-    def getresults(self) -> list[Any]:
+    def getresult(self) -> Any:
         pass
 
     @abstractmethod
-    def getresult(self) -> Any:
+    def getresults(self) -> list[Any]:
         pass
         
 #Creating a function to call api and save to a python readable JSON file. Since this is a general function to call the API. We set the return type annotation to Any.
