@@ -1,7 +1,7 @@
 from API_classes.BaseApi import BaseApi
 from Models.GeoData import GeoData
 class GeoDataApi(BaseApi):
-    def __init__(self, url, params):
+    def __init__(self, url:str, params:dict):
         super().__init__(url, params)
 
     def getresult(self) -> GeoData:
@@ -11,8 +11,11 @@ class GeoDataApi(BaseApi):
             raise FileNotFoundError("No GeoData found")
 
     def getresults(self) ->list[GeoData]:
+        
         data:list[GeoData] = []
-        parser = self.getrequest()
-        return [GeoData(p) for p in parser]
+        records = self.getrequest()
+        for rec in records:
+             data.append(GeoData(rec))
+        return data
 
         
