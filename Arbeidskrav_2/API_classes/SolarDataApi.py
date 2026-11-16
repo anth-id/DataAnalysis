@@ -13,5 +13,7 @@ class SolarDataApi(BaseApi):
 
     def getresults(self) -> list[SolarData]:
         data:list[SolarData] = []
-        parser = self.getrequest()
-        return [SolarData(p) for p in parser['days']]
+        records = self.getrequest()
+        for rec in records:
+            data.append(SolarData(rec['days']))
+        return data
