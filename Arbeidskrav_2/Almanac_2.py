@@ -24,7 +24,7 @@ openweathermap_api:str = "https://api.openweathermap.org/geo/1.0/direct"
 2. Using list comprehension to first split userinput into separate strings and then strip blankspaces. Saving each city into cities list.
 3. Creating a dataframe list used to save each city df into one.
 '''
-location_input:str = input('Enter your cities, separated with commas.\n')
+location_input:str = input('Enter your city/cities, separated with commas.\n')
 cities = [l.strip() for l in location_input.split(",")]
 dfs:list[pd.DataFrame] = []
 
@@ -42,8 +42,7 @@ db:SolarDataDb = SolarDataDb(f"host=localhost dbname=dataanalytiker_FSV user={cr
 '''
 1. Looping trough each city in cities list and assigns city to q parameter and uses api-key as app-id.
 2. Creating a GeoDataApi object as geoApi with openweathermap api url and geo_params.
-3. Creating a list called gdata which calls GeoDataApi method to retreive and save GeoData from the api call.
-
+3. Creating a list called gdata which calls GeoDataApi method to retreive and save GeoData from the api call (cityname, longitude and latitude).
 
 '''
 try:
@@ -56,7 +55,10 @@ try:
         geoApi:GeoDataApi = GeoDataApi(openweathermap_api, geo_params)
         gdata:list[GeoData] = geoApi.getresults()
         
+        '''
         
+        
+        '''
 
         try: 
             solar_params = {
@@ -87,6 +89,8 @@ finally:
     db.close()
 
 
+
+#Continue on a seperate file that makes the calculations. 
     dfcombined = pd.concat(dfs, ignore_index=True)
 plot_data = dfcombined.pivot(
     columns="city",
