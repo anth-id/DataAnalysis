@@ -79,12 +79,17 @@ try:
         except Exception as e :
             raise SystemExit(f"An error has occured for {city} ({e})")
 
-        #Sorting on date
+        #Sorting on Solar altiude (maximum angle of the sun above the horizon)
+        data:list[SolarData] = sorted(sdata, key=lambda SolarData: SolarData.solar_noon_altitude, reverse=True)
+        solar_noon_sorted = data[0]
+        print(f"In {city} the date with where the sun is at its maximum angle above the horizon is {solar_noon_sorted.date} ")
+        #Sorting on date, creating a dataframe, adding a city column and then appending to a list with dataframes.
+        
         days:list[SolarData] = sorted(sdata, key=lambda SolarData: SolarData.date)
-
         df = pd.DataFrame(d.__dict__ for d in days)
         df["city"] = city
         dfs.append(df)
+
 finally:
     db.close()
 
@@ -104,14 +109,4 @@ plt.ylabel("Degrees over horizon")
 plt.show()
 
 
-dfcombined = pd.concat(dfs, ignore_index=True)
-plot_data = dfcombined.pivot(
-    columns="city",
-    index="date",
-    values="daylen_hours"
-)
 
-plot_data.plot.line(title="Day length")
-plt.xlabel("Date")
-plt.ylabel("Day length")
-plt.show()
