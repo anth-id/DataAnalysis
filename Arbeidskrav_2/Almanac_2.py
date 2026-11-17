@@ -14,8 +14,8 @@ if apikey == 'None':
     raise SystemExit("Failed to retrieve API Key from Python Keyring")
 
 #saving api base url as string variables
-sunset_sunrise_api:str = "https://api.sunrise-sunset.org/v2"
-openweathermap_api:str = "https://api.openweathermap.org/geo/1.0/direct"
+SUNSET_SUNRISE_URL:str = "https://api.sunrise-sunset.org/v2"
+OPENWEATHERMAP_URL:str = "https://api.openweathermap.org/geo/1.0/direct"
 
 
 
@@ -42,7 +42,7 @@ db:SolarDataDb = SolarDataDb(f"host=localhost dbname=dataanalytiker_FSV user={cr
 '''
 1. Looping trough each city in cities list and assigns city to q parameter and uses api-key as app-id.
 2. Creating a GeoDataApi object as geoApi with openweathermap api url and geo_params.
-3. Creating a list called gdata which calls GeoDataApi method to retreive and save GeoData from the api call (cityname, longitude and latitude).
+3. Creating a list called gdata which calls GeoDataApi getresults method to retreive and save GeoData from the api call (cityname, longitude and latitude).
 4. Catch error if there is no records in gdata list. Then continues with the other cities.
 
 '''
@@ -54,32 +54,36 @@ try:
                     "limit" : 1, 
                     "appid": apikey
                     }
-        geoApi:GeoDataApi = GeoDataApi(openweathermap_api, geo_params)
+        geoApi:GeoDataApi = GeoDataApi(OPENWEATHERMAP_URL, geo_params)
         gdata:list[GeoData] = geoApi.getresults()
         if not gdata:
             print(f"{city} was not found.")
             continue
         
         '''
-        
+        1. Creating a SolarDataApi object as solarApi with sunset sunrise api url and solar_params. Using parameters from geodata.
+        2. Creating a list called sdata which calls SolarDataApi get results method to retrieve and save SolarData from the api call. 
+        3. Inserts the city, lon and lat into city table, db.getcity wil then return the city_id from the corresponding id in city table. 
+        4. Inserts every record from sdata with the corresponding city_id from city table.
         
         '''
 
         try: 
-            solar_params = {
+            solar_params:dict = {
                 "lat": gdata[0].lat,
                 "lng": gdata[0].lon,
                 "date_start": '2026-01-01',
                 "date_end": '2026-12-31'
                 }
-            solarApi:SolarDataApi = SolarDataApi(sunset_sunrise_api,solar_params)
-            sdata = solarApi.getresults()
+            solarApi:SolarDataApi = SolarDataApi(SUNSET_SUNRISE_URL,solar_params)
+            sdata:list[SolarData] = solarApi.getresults()
             print(f"Trying to retrieve information for {city}.")
 
             city_id:int = db.getcity(gdata[0])
             for day in sdata:
                 db.insert(city_id,day)
-            print(f"Information {city} inserted into the database.")
+            print(f"Information {city} inserted into the database. \n")
+            
 
         except Exception as e :
             raise SystemExit(f"An error has occured for {city} ({e})")
@@ -95,13 +99,14 @@ try:
         df["city"] = city
         dfs.append(df)
 
+
 finally:
     db.close()
 
 
 
 #Continue on a seperate file that makes the calculations. 
-    dfcombined = pd.concat(dfs, ignore_index=True)
+dfcombined = pd.concat(dfs, ignore_index=True)
 plot_data = dfcombined.pivot(
     columns="city",
     index="date",
