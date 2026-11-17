@@ -14,7 +14,7 @@ class SolarData:
     def format_time(value:datetime | None) -> str | None:
         if value is None:
             return "N/A"
-        return value.strftime("%H:%M:S")
+        return value.strftime("%H:%M:%S")
 
 
 
