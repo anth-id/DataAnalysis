@@ -10,9 +10,6 @@ class BaseApi(ABC):
         self.url = url
         self.params = params
 
-    @abstractmethod
-    def getresult(self) -> Any:
-        pass
 
     @abstractmethod
     def getresults(self) -> list[Any]:
