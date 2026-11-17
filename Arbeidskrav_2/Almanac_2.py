@@ -43,10 +43,12 @@ db:SolarDataDb = SolarDataDb(f"host=localhost dbname=dataanalytiker_FSV user={cr
 1. Looping trough each city in cities list and assigns city to q parameter and uses api-key as app-id.
 2. Creating a GeoDataApi object as geoApi with openweathermap api url and geo_params.
 3. Creating a list called gdata which calls GeoDataApi method to retreive and save GeoData from the api call (cityname, longitude and latitude).
+4. Catch error if there is no records in gdata list. Then continues with the other cities.
 
 '''
 try:
     for city in cities:
+        
         geo_params:dict = {
                     "q": city,
                     "limit" : 1, 
@@ -54,6 +56,9 @@ try:
                     }
         geoApi:GeoDataApi = GeoDataApi(openweathermap_api, geo_params)
         gdata:list[GeoData] = geoApi.getresults()
+        if not gdata:
+            print(f"{city} was not found.")
+            continue
         
         '''
         
