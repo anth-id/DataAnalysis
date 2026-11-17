@@ -36,7 +36,7 @@ The information retrieved is then loaded into DataFrames and made calculations o
 keyring set openweathermap api-key
 ```
 3. Download PostgreSQL database and set it up. 
-4. Set up your PostgreSQL database. Use keyring to store your PostgreSQL credentials. Then paste your password in the terminal.
+4. Use keyring to store your PostgreSQL credentials. Then paste your password in the terminal.
 ```
 keyring set PostgreSQL postgres
 ```
@@ -67,7 +67,7 @@ Enter your city/cities, separated with commas.
 User input:
 ```
 Oslo, Madrid, Copenhagen
-
+```
 
 ## Use of AI
 I've used Brave AI search and claude to help me with syntaxes or make me understand concepts. 
@@ -76,4 +76,5 @@ Examples:
 * How would you handle this if sunset, sunrise and daylen was None?
 
 * How would you secure that my program never insert a new line into the database if there is already a city_id and date in it?
+
 * Is it better to have cred = keyring in my main file or in the solardata class?
