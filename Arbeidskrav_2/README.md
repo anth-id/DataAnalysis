@@ -70,11 +70,12 @@ Oslo, Madrid, Copenhagen
 ```
 
 ## Use of AI
-I've used Brave AI search and claude to help me with syntaxes or make me understand concepts. 
-Examples:
+I've used Brave AI search and Claude to help me with syntaxes or make me understand concepts, mostly around OOP and PostgreSQL connection. 
+
+Prompts above 12 words used in this project:
 
 * How would you handle this if sunset, sunrise and daylen was None?
 
-* How would you secure that my program never insert a new line into the database if there is already a city_id and date in it?
+* How would you secure that my program never insert a new line into the database if there is already a record with the city_id and date in it?
 
 * Is it better to have cred = keyring in my main file or in the solardata class?
