@@ -35,20 +35,31 @@ class SolarDataDb:
 
 
     def insert(self, city_id:int, solar:SolarData):
-            try:
-                with self.conn.cursor() as cursor:
-                    cursor.execute('''
-                    INSERT INTO solar_day (city_id, date, sunrise, sunset, day_length_seconds, sunrise_azimuth, solar_noon_altitude, moon_illumination)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (city_id, date) DO NOTHING
-                    ''', (city_id, solar.date, solar.sunrise, solar.sunset,
-                 solar.daylen_seconds, solar.sunrise_azimuth,
-                 solar.solar_noon_altitude, solar.moon_illumination)
-                )
-                self.conn.commit()
-            except Exception as e:
-                self.conn.rollback()
-                raise
+        try:
+            with self.conn.cursor() as cursor:
+                cursor.execute('''
+                INSERT INTO solar_day (city_id, date, sunrise, sunset, day_length_seconds, sunrise_azimuth, solar_noon_altitude, moon_illumination)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (city_id, date) DO NOTHING
+                ''', (city_id, solar.date, solar.sunrise, solar.sunset,
+                solar.daylen_seconds, solar.sunrise_azimuth,
+                solar.solar_noon_altitude, solar.moon_illumination)
+            )
+            self.conn.commit()
+        except Exception as e:
+            self.conn.rollback()
+            raise
+
+
+    def retrieve(self, cities: list[str] ) -> pd.DataFrame:
+        "Gives aliases to city(c) and solar_day(s)"
+        sql:str = '''
+            SELECT c.city_name AS city, s.date, s.sunrise, s.sunset, 
+            s.day_length_seconds, s.sunrise_azimuth, s.solar_noon_altitude, s.moon_illumination
+            FROM solar_day AS s
+            JOIN city AS c on c.id = s.city_id
+            '''
+            #Continue here 
     
 
     def close(self) -> None :
