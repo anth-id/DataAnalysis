@@ -7,6 +7,8 @@ from Models.GeoData import GeoData
 from Models.SolarData import SolarData
 import matplotlib.pyplot as plt
 from postgreSQL.SolarDataDB import SolarDataDb
+import os 
+from dotenv import load_dotenv
 
 #Saving api-key to openweathermap as apikey, raises systemexit if it cant retrieve the api key
 apikey:str = str(keyring.get_password("openweathermap", "api-key"))
@@ -29,15 +31,30 @@ cities = [l.strip() for l in location_input.split(",")]
 dfs:list[pd.DataFrame] = []
 
 '''
-1. Creating a credentials variable (cred) for setting up postgreSQL connection.
-2. If failed to retrieve credentials, then raise SystemExit.
-3. Creating a SolarDataDB object that connects to the database. 
+1. Creating user, dbname and host variables to be able to configure .env file for the specific users database.
+2. Creating a credentials variable (cred) for setting up postgreSQL connection.
+3. If failed to retrieve credentials, then raise SystemExit.
+4. Creating a SolarDataDB object that connects to the database. 
 
 '''
-cred = keyring.get_credential("PostgreSQL", "postgres")
+load_dotenv()
+user:str | None = os.getenv("PG_USER")
+if user is None:
+    raise SystemExit("No configured PG_USER in .env")
+
+dbname: str | None = os.getenv("PG_DATABASE")
+if dbname is None:
+    raise SystemExit("No configured DB_NAME in .env")
+
+host: str | None = os.getenv("PG_HOST")
+if host is None:
+    raise SystemExit("No configured PG_HOST in .env")
+
+
+cred = keyring.get_credential("PostgreSQL", user)
 if cred is None:
-    raise SystemExit("Failed to retreieve database credentials.")
-db:SolarDataDb = SolarDataDb(f"host=localhost dbname=dataanalytiker_FSV user={cred.username} password={cred.password}")
+    raise SystemExit("Failed to retreieve database password.")
+db:SolarDataDb = SolarDataDb(f"host={host} dbname={dbname} user={cred.username} password={cred.password}")
 
 '''
 1. Looping trough each city in cities list and assigns city to q parameter and uses api-key as app-id.
