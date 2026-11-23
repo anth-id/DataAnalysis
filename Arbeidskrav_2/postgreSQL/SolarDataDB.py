@@ -54,19 +54,24 @@ class SolarDataDb:
 
     def retrieve(self, cities: list[str] ) -> pd.DataFrame:
         #Gives aliases to city(c) and solar_day(s)
+        '''
+        1. Start with writing SQL code. Using aliases. Selects all parameters. Joins city and solar day tables.
+        Where city_name = any of input parameters cities. Then sorting on cityname, then date.
+        2.
+        
+        '''
         sql:str = '''
             SELECT c.city_name AS city, s.date, s.sunrise, s.sunset, 
             s.day_length_seconds, s.sunrise_azimuth, s.solar_noon_altitude, s.moon_illumination
             FROM solar_day AS s
             JOIN city AS c on c.id = s.city_id
-            WHERE lower(c.cityname)
-            ORDER BY c.cityname, s.date
+            WHERE lower(c.city_name) = Any(%s)
+            ORDER BY c.city_name, s.date
             '''
         try:
             #Need to match lowercase, ex oslo vs Oslo.
             with self.conn.cursor() as cursor:
-                cursor.execute(sql)
-                rows = cursor.fetchall()
+                cursor.execute(sql, ([c.lower() for c in cities],))
                 column_names = cursor.description
                 if column_names is None:
                     raise SystemExit("The query didnt return any results.")
@@ -74,12 +79,13 @@ class SolarDataDb:
                 columns:list[str] = []
                 for col in column_names:
                     columns.append(col[0])
-                    
+
+                rows = cursor.fetchall()
+
         except Exception:
             self.conn.rollback()
             raise
-        return pd.DataFrame(rows)
-                #Continue here 
+        return pd.DataFrame(rows, columns=columns)
     
 
     def close(self) -> None :

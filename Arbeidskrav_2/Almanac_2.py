@@ -1,5 +1,4 @@
 import keyring
-import psycopg2
 import pandas as pd
 from API_classes.SolarDataApi import SolarDataApi
 from API_classes.GeoDataApi import GeoDataApi
@@ -117,8 +116,9 @@ try:
         df["city"] = city
         dfs.append(df)
 
-    retrievedata:pd.DataFrame = db.retrieve(cities)
+        retrievedata:pd.DataFrame = db.retrieve(cities)
     print(retrievedata)
+  
 finally:
     db.close()
 
