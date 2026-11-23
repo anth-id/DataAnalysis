@@ -18,7 +18,8 @@ if apikey == 'None':
 #saving api base url as string variables
 SUNSET_SUNRISE_URL:str = "https://api.sunrise-sunset.org/v2"
 OPENWEATHERMAP_URL:str = "https://api.openweathermap.org/geo/1.0/direct"
-
+START_DATE = "2026-01-01"
+END_DATE = "2026-12-31"
 
 
 '''
@@ -89,8 +90,8 @@ try:
             solar_params:dict = {
                 "lat": gdata[0].lat,
                 "lng": gdata[0].lon,
-                "date_start": '2026-01-01',
-                "date_end": '2026-12-31'
+                "date_start": START_DATE,
+                "date_end": END_DATE
                 }
             solarApi:SolarDataApi = SolarDataApi(SUNSET_SUNRISE_URL,solar_params)
             sdata:list[SolarData] = solarApi.getresults()
@@ -116,7 +117,8 @@ try:
         df["city"] = city
         dfs.append(df)
 
-
+    retrievedata:pd.DataFrame = db.retrieve(cities)
+    print(retrievedata)
 finally:
     db.close()
 
@@ -134,6 +136,7 @@ plot_data.plot.line(title="Solar Altidude", xlabel = "Date", ylabel="Azimuth")
 plt.xlabel("Date")
 plt.ylabel("Degrees over horizon")
 plt.show()
+
 
 
 

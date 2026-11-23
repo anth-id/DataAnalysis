@@ -1,6 +1,7 @@
 from Models.SolarData import SolarData
 from Models.GeoData import GeoData
 import psycopg2
+import pandas as pd
 
 
 class SolarDataDb:
@@ -52,14 +53,33 @@ class SolarDataDb:
 
 
     def retrieve(self, cities: list[str] ) -> pd.DataFrame:
-        "Gives aliases to city(c) and solar_day(s)"
+        #Gives aliases to city(c) and solar_day(s)
         sql:str = '''
             SELECT c.city_name AS city, s.date, s.sunrise, s.sunset, 
             s.day_length_seconds, s.sunrise_azimuth, s.solar_noon_altitude, s.moon_illumination
             FROM solar_day AS s
             JOIN city AS c on c.id = s.city_id
+            WHERE lower(c.cityname)
+            ORDER BY c.cityname, s.date
             '''
-            #Continue here 
+        try:
+            #Need to match lowercase, ex oslo vs Oslo.
+            with self.conn.cursor() as cursor:
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                column_names = cursor.description
+                if column_names is None:
+                    raise SystemExit("The query didnt return any results.")
+                
+                columns:list[str] = []
+                for col in column_names:
+                    columns.append(col[0])
+                    
+        except Exception:
+            self.conn.rollback()
+            raise
+        return pd.DataFrame(rows)
+                #Continue here 
     
 
     def close(self) -> None :
