@@ -2,6 +2,7 @@ import keyring
 import pandas as pd
 from API_classes.SolarDataApi import SolarDataApi
 from API_classes.GeoDataApi import GeoDataApi
+from Calculations.SunCalc import SunCalc
 from Models.GeoData import GeoData
 from Models.SolarData import SolarData
 import matplotlib.pyplot as plt
@@ -104,38 +105,43 @@ try:
 
         except Exception as e :
             raise SystemExit(f"An error has occured for {city} ({e})")
-
-        #Sorting on Solar altiude (maximum angle of the sun above the horizon)
-        data:list[SolarData] = sorted(sdata, key=lambda SolarData: SolarData.solar_noon_altitude, reverse=True)
-        solar_noon_sorted = data[0]
-        print(f"In {city} the date with where the sun is at its maximum angle above the horizon is {solar_noon_sorted.date} ")
-        #Sorting on date, creating a dataframe, adding a city column and then appending to a list with dataframes.
         
-        days:list[SolarData] = sorted(sdata, key=lambda SolarData: SolarData.date)
-        df = pd.DataFrame(d.__dict__ for d in days)
-        df["city"] = city
-        dfs.append(df)
-
         retrievedata:pd.DataFrame = db.retrieve(cities)
-    print(retrievedata)
   
 finally:
     db.close()
 
 
+calculations:SunCalc = SunCalc(retrievedata)
+avg_monthly_sun = calculations.avg_daylength_p_month()
 
-#Continue on a seperate file that makes the calculations. 
-dfcombined = pd.concat(dfs, ignore_index=True)
-plot_data = dfcombined.pivot(
-    columns="city",
-    index="date",
-    values="solar_noon_altitude"
-)
 
-plot_data.plot.line(title="Solar Altidude", xlabel = "Date", ylabel="Azimuth")
-plt.xlabel("Date")
-plt.ylabel("Degrees over horizon")
+avg_monthly_sun.plot.line(title="Average daylength per month", xlabel = "Month", ylabel= "Hours of daylight")
+plt.xlabel("Month")
+plt.ylabel("Hours of daylight")
 plt.show()
+
+
+
+
+
+
+
+
+
+
+# #Continue on a seperate file that makes the calculations. 
+# dfcombined = pd.concat(dfs, ignore_index=True)
+# plot_data = dfcombined.pivot(
+#     columns="city",
+#     index="date",
+#     values="solar_noon_altitude"
+# )
+
+# plot_data.plot.line(title="Solar Altidude", xlabel = "Date", ylabel="Azimuth")
+# plt.xlabel("Date")
+# plt.ylabel("Degrees over horizon")
+# plt.show()
 
 
 
