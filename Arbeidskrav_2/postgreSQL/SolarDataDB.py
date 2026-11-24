@@ -57,7 +57,8 @@ class SolarDataDb:
         '''
         1. Start with writing SQL code. Using aliases. Selects all parameters. Joins city and solar day tables.
         Where city_name = any of input parameters cities. Then sorting on cityname, then date.
-        2.
+        2.Excecutes sql and inserts city lowercase into Any. 
+        3.Scripts to add column names to the DataFrame.
         
         '''
         sql:str = '''
@@ -79,7 +80,6 @@ class SolarDataDb:
                 columns:list[str] = []
                 for col in column_names:
                     columns.append(col[0])
-
                 rows = cursor.fetchall()
 
         except Exception:
