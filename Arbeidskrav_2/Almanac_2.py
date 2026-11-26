@@ -10,6 +10,7 @@ from postgreSQL.SolarDataDB import SolarDataDb
 import os 
 from dotenv import load_dotenv
 
+
 #Saving api-key to openweathermap as apikey, raises systemexit if it cant retrieve the api key
 apikey:str = str(keyring.get_password("openweathermap", "api-key"))
 if apikey == 'None':
@@ -18,8 +19,8 @@ if apikey == 'None':
 #saving api base url as string variables
 SUNSET_SUNRISE_URL:str = "https://api.sunrise-sunset.org/v2"
 OPENWEATHERMAP_URL:str = "https://api.openweathermap.org/geo/1.0/direct"
-START_DATE = "2026-01-01"
-END_DATE = "2026-12-31"
+START_DATE:str = "2026-01-01"
+END_DATE:str = "2026-12-31"
 
 
 '''
@@ -28,7 +29,7 @@ END_DATE = "2026-12-31"
 3. Creating a dataframe list used to save each city df into one.
 '''
 location_input:str = input('Enter your city/cities, separated with commas.\n')
-cities = [l.strip() for l in location_input.split(",")]
+cities:list = [l.strip() for l in location_input.split(",")]
 dfs:list[pd.DataFrame] = []
 
 '''
@@ -100,7 +101,7 @@ try:
             city_id:int = db.getcity(gdata[0])
             for day in sdata:
                 db.insert(city_id,day)
-            print(f"Information {city} inserted into the database. \n")
+            print(f"Solar information was inserted into the database for: {city}\n")
             
 
         except Exception as e :
@@ -113,35 +114,13 @@ finally:
 
 
 calculations:SunCalc = SunCalc(retrievedata)
-avg_monthly_sun = calculations.avg_daylength_p_month()
+avg_monthly_sun:pd.DataFrame = calculations.avg_daylength_p_month()
 
 
 avg_monthly_sun.plot.line(title="Average daylength per month", xlabel = "Month", ylabel= "Hours of daylight")
 plt.xlabel("Month")
 plt.ylabel("Hours of daylight")
 plt.show()
-
-
-
-
-
-
-
-
-
-
-# #Continue on a seperate file that makes the calculations. 
-# dfcombined = pd.concat(dfs, ignore_index=True)
-# plot_data = dfcombined.pivot(
-#     columns="city",
-#     index="date",
-#     values="solar_noon_altitude"
-# )
-
-# plot_data.plot.line(title="Solar Altidude", xlabel = "Date", ylabel="Azimuth")
-# plt.xlabel("Date")
-# plt.ylabel("Degrees over horizon")
-# plt.show()
 
 
 
